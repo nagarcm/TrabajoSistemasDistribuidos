@@ -1,4 +1,7 @@
-package Model;
+package Model.Cards;
+
+import Model.Enums.CardColor;
+import Model.Enums.CardType;
 
 public class Card {
 	private String name; //ID de la carta

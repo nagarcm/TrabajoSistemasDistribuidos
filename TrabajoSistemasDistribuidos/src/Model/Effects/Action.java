@@ -1,5 +1,5 @@
-package Model;
+package Model.Effects;
 
 public class Action {
-
+	
 }
