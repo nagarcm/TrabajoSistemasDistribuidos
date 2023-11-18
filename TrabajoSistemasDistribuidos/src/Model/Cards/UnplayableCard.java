@@ -1,8 +1,8 @@
 package Model.Cards;
 
 import Model.Effects.Effect;
-import Model.Enums.CardColor;
-import Model.Enums.CardType;
+import Model.basics.CardColor;
+import Model.basics.CardType;
 
 public class UnplayableCard extends Card {
 	

@@ -1,12 +1,16 @@
 package Model.Cards;
 
-import Model.Enums.CardColor;
-import Model.Enums.CardType;
+import java.util.HashMap;
+
+import Model.basics.CardColor;
+import Model.basics.CardType;
 
 public class Card {
+	public static HashMap<String, Integer> NumberOfCopy = new HashMap<String, Integer>();
 	private String name; //ID de la carta
+	private int numberCopy;
 	private CardColor color;
-	private CardType Card;
+	private CardType type;
 	private String description;
 	
 	public String getName() {
@@ -22,10 +26,10 @@ public class Card {
 		this.color = color;
 	}
 	public CardType getCard() {
-		return Card;
+		return this.type;
 	}
-	public void setCard(CardType card) {
-		Card = card;
+	public void setCard(CardType type) {
+		this.type = type;
 	}
 	public String getDescription() {
 		return description;
@@ -36,11 +40,20 @@ public class Card {
 	
 	
 	/***********************************************************************************************************************/
-	public Card(String name, CardColor color, CardType card, String description) {
+	public Card(String name, CardColor color, CardType type, String description) {
 		this.name = name;
 		this.color = color;
-		Card = card;
+		this.type =  type;
 		this.description = description;
+		if(Card.NumberOfCopy.containsKey(name)) {
+			this.numberCopy = Card.NumberOfCopy.get(name) + 1;
+			Card.NumberOfCopy.replace(name, this.numberCopy);
+		}else {
+			Card.NumberOfCopy.put(name, 1);
+			this.numberCopy =1;
+		}
+		
+		
 	}
 	
 	
@@ -48,6 +61,9 @@ public class Card {
 	
 	
 	
+	public boolean equals(Card c) {
+		return this.name.equals(c.name) && this.numberCopy ==c.numberCopy;
+	}
 	
 	//fin de la clase
 }
