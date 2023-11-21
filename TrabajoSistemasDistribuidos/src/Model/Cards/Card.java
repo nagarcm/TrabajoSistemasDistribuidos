@@ -37,7 +37,9 @@ public class Card {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+	public int getNumberCopy() {
+		return this.numberCopy;
+	}
 	
 	/***********************************************************************************************************************/
 	public Card(String name, CardColor color, CardType type, String description) {
@@ -52,17 +54,19 @@ public class Card {
 			Card.NumberOfCopy.put(name, 1);
 			this.numberCopy =1;
 		}
-		
-		
 	}
+	public Card() { }
 	
 	
 	
 	
-	
-	
-	public boolean equals(Card c) {
-		return this.name.equals(c.name) && this.numberCopy ==c.numberCopy;
+	@Override
+	public boolean equals(Object c) {
+		if (c instanceof Card) {
+		return this.name.equals(( (Card)c).name) && this.numberCopy ==((Card)c).numberCopy;
+		} else {
+			return false;
+		}
 	}
 	
 	//fin de la clase

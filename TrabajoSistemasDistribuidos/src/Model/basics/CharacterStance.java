@@ -1,5 +1,5 @@
 package Model.basics;
 
-public enum CharacterStatus {
+public enum CharacterStance {
 	Neutral, Calm, Wrath, Divinity;
 }

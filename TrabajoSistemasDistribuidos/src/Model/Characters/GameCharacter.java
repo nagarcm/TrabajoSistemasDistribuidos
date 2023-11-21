@@ -13,7 +13,7 @@ public class GameCharacter {
 	private int HP;
 	private int shield;
 	private List<Relic> relics;
-	private CharacterStatus status;
+	private CharacterStance status;
 	private List<Buff> buffs;
 	private Card lastCardPlayed;
 	private int timesLoseHP; 
