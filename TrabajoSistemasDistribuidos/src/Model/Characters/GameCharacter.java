@@ -3,7 +3,7 @@ package Model.Characters;
 import java.util.*;
 
 import Model.Buffs.Buff;
-import Model.Cards.Card;
+import Model.Cards.*;
 import Model.Relics.*;
 import Model.basics.*;
 import Model.Data.*;
@@ -57,6 +57,9 @@ public class GameCharacter implements ITurnReset{
 
 	public void setHp(int hp) {
 		this.hp = hp;
+		if (this.hp ==0) {
+			//End Game or send a signal
+		}
 	}
 
 
@@ -67,6 +70,9 @@ public class GameCharacter implements ITurnReset{
 
 	public void setBlock(int block) {
 		this.block = block;
+		if (this.block == 0) {
+			//Bypassed block
+		}
 	}
 
 
@@ -79,12 +85,14 @@ public class GameCharacter implements ITurnReset{
 		this.relics = relics;
 	}
 
+	public void addRelic(Relic r) {
+		this.relics.add(r);
+	}
 
 	public CharacterStance getStance() {
 		return stance;
 	}
-
-
+	
 	public void setStance(CharacterStance stance) {
 		this.stance = stance;
 	}
@@ -175,9 +183,54 @@ public class GameCharacter implements ITurnReset{
 	public void turnReset() {
 		//do stuff when the turn ends;
 	}
+	public void addMantra(int mantra) {
+		int previousMantra = this.combat.getMantra();
+		if ((previousMantra/10) < ((previousMantra+mantra)/10)) {
+			this.setStance(CharacterStance.Divinity);
+		}
+		this.combat.addMantra(mantra);
+	}
+	//Simple Damage Take, block first
+	//
+	//
+	public void takeDamage(int dmg) {
+		for (Buff b : this.buffs) {
+			if (b.getName().equals("Vulnerable")) {
+				dmg += dmg / 2;
+			}
+		}
+		//This should also consider relics that affect this debuff but for now let it be
+		if (this.block > 0 ) {
+			if (this.block < dmg) {
+				dmg -= this.block;
+				this.setBlock(0);
+				if (this.hp > dmg) {
+					this.hp -= dmg;
+				} else {
+					this.setHp(0);
+					//End of the game;
+				}
+			}
+		} else if (this.block > dmg){
+			this.block -= dmg;
+		} else {
+			//I do this in this way because in the future I want to implement some relics 
+			//that have specific behavior when you bypass foe's block
+			this.setBlock(0);
+		}
+	}
 	
-	
-	
+	public int calculateCardDamage(AttackCard c) {
+		int str = 0; //Take Strength from character buffs or make it a attribute of the class
+			
+		int dmg = c.damage(str, this.block);
+		if (this.stance == CharacterStance.Wrath) {
+			dmg = 2*dmg;
+		} else if (this.stance == CharacterStance.Divinity) {
+			dmg = 3*dmg;
+		}
+		return dmg;
+	}
 	
 	
 }
