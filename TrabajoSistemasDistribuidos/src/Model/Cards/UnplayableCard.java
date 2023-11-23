@@ -14,4 +14,18 @@ public class UnplayableCard extends Card {
 		// TODO Auto-generated constructor stub
 	}
 
+
+	@Override
+	public void played() {
+		// TODO Auto-generated method stub
+		//On play exhaust?
+	}
+
+
+	@Override
+	public void reset() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

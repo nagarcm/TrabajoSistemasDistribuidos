@@ -1,17 +1,19 @@
 package Model.Cards;
 
-import java.util.HashMap;
+import java.util.*;
 
-import Model.basics.CardColor;
-import Model.basics.CardType;
+import Model.basics.*;
 
-public class Card {
+public abstract class Card {
 	public static HashMap<String, Integer> NumberOfCopy = new HashMap<String, Integer>();
 	private String name; //ID de la carta
 	private int numberCopy;
 	private CardColor color;
 	private CardType type;
 	private String description;
+	
+	private Set<EventType> events;
+	private Set<CardMod> mods;
 	
 	public String getName() {
 		return name;
@@ -54,6 +56,8 @@ public class Card {
 			Card.NumberOfCopy.put(name, 1);
 			this.numberCopy =1;
 		}
+		this.events = new HashSet<EventType>();
+		this.mods = new HashSet<>();
 	}
 	public Card() { }
 	
@@ -68,6 +72,33 @@ public class Card {
 			return false;
 		}
 	}
+	public Set<EventType> getEvents() {
+		return events;
+	}
+	public void addEvent(EventType e) {
+		this.events.add(e);
+	}
+	public void removeEvent(EventType e) {
+		this.events.remove(e);
+	}
+	public boolean canReactEvent(EventType e) {
+		return this.events.contains(e);
+	}
 	
+	public Set<CardMod> getMods() {
+		return mods;
+	}
+	public void addMod(CardMod e) {
+		this.mods.add(e);
+	}
+	public void removeMod(CardMod e) {
+		this.mods.remove(e);
+	}
+	public boolean haveMod(CardMod e) {
+		return this.mods.contains(e);
+	}
+	
+	public abstract void played();
+	public abstract void reset();
 	//fin de la clase
 }

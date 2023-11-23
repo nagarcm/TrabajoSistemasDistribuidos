@@ -1,5 +1,5 @@
 package Model.basics;
 
-public enum CardAspect {
+public enum CardMod {
 	Exhaust, Innate, Ethereal, Unplayable;
 }
