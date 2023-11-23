@@ -25,6 +25,13 @@ public class CardContainer {
 		}
 		return cards.get(0);
 	}
+	// PRE : Card c is in the container
+	// POST : Removes de the card from the container and returns it
+	public Card drawCard(Card c) {
+		this.removeCard(c);
+		return c;
+	}
+	
 	public void addCard(Card c) {
 		this.cards.add(c);
 		if (c.haveMod(CardMod.Innate)) {
@@ -33,6 +40,9 @@ public class CardContainer {
 	}
 	public boolean isEmpty() {
 		return this.cards.isEmpty();
+	}
+	public boolean contains(Card c) {
+		return this.cards.contains(c);
 	}
 	public void removeCard(Card c) {
 		if (this.cards.remove(c) && c.haveMod(CardMod.Innate)) {
