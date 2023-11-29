@@ -28,4 +28,11 @@ public class UnplayableCard extends Card {
 		
 	}
 
+
+	@Override
+	public Object clone() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

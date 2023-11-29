@@ -129,6 +129,11 @@ public class AttackCard extends Card {
 		this.buffs = new ArrayList<>();
 		
 	}
+	@Override
+	public Object clone() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 

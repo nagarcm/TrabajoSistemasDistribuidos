@@ -6,6 +6,7 @@ import Model.basics.*;
 
 public abstract class Card {
 	public static HashMap<String, Integer> NumberOfCopy = new HashMap<String, Integer>();
+	public static Set<Card> allCards = new HashSet<Card>();
 	private String name; //ID de la carta
 	private int numberCopy;
 	private CardColor color;
@@ -97,7 +98,8 @@ public abstract class Card {
 	public boolean haveMod(CardMod e) {
 		return this.mods.contains(e);
 	}
-	
+	@Override
+	public abstract Object clone();
 	public abstract void played();
 	public abstract void reset();
 	//fin de la clase
