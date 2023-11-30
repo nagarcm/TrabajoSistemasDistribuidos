@@ -7,14 +7,15 @@ import Model.basics.*;
 public abstract class Card {
 	public static HashMap<String, Integer> NumberOfCopy = new HashMap<String, Integer>();
 	public static Set<Card> allCards = new HashSet<Card>();
-	private String name; //ID de la carta
-	private int numberCopy;
-	private CardColor color;
-	private CardType type;
-	private String description;
 	
-	private Set<EventType> events;
-	private Set<CardMod> mods;
+	protected String name; //ID de la carta
+	protected int numberCopy;
+	protected CardColor color;
+	protected CardType type;
+	protected String description;
+	
+	protected Set<EventType> events;
+	protected Set<CardMod> mods;
 	
 	public String getName() {
 		return name;
@@ -102,5 +103,6 @@ public abstract class Card {
 	public abstract Object clone();
 	public abstract void played();
 	public abstract void reset();
+	public abstract void copyStats(Card c);
 	//fin de la clase
 }

@@ -37,4 +37,16 @@ public class Buff {
 	}
 	
 	
+	public Buff(String name, int turnsLeft, int value) {
+		super();
+		this.name = name;
+		this.turnsLeft = turnsLeft;
+		this.value = value;
+	}
+
+	@Override
+	public Object clone() {
+		return new Buff(name, turnsLeft, value);
+	}
+	
 }

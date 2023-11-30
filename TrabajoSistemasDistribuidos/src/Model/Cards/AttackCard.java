@@ -134,6 +134,11 @@ public class AttackCard extends Card {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	@Override
+	public void copyStats(Card c) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 
