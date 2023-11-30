@@ -18,7 +18,8 @@ public class AttackCard extends Card {
 	private int blockGain;
 	private int cardsDraw;
 	private int cardsDiscarted;
-	private List<Buff> buffs;
+	private Set<Buff> buffs;
+	private Set<Buff> debuffs;
 	
 	public int getBaseDmg() {
 		return this.baseDmg;
@@ -81,16 +82,30 @@ public class AttackCard extends Card {
 		this.cardsDraw = cardsDraw;
 	}
 
-	public List<Buff> getBuffs() {
+	public Set<Buff> getBuffs() {
 		return buffs;
 	}
 
-	public void setBuffs(List<Buff> buffs) {
+	public void setBuffs(Set<Buff> buffs) {
 		this.buffs = buffs;
+	}
+	public void addBuffs(Buff buffs) {
+		this.buffs.add(buffs);
+	}
+	
+	public Set<Buff> getDebuffs() {
+		return debuffs;
+	}
+
+	public void setDebuffs(Set<Buff> debuffs) {
+		this.debuffs = debuffs;
+	}
+	public void addDebuffs(Buff debuffs) {
+		this.debuffs.add(debuffs);
 	}
 
 	public AttackCard(String name, CardColor color, CardType type, String description, int energyCost, int baseDmg, int strScaling,
-			int blockScaling, int numHits, int blockGain, int cardsDraw, int cardsDiscarted, List<Buff> buffs) {
+			int blockScaling, int numHits, int blockGain, int cardsDraw, int cardsDiscarted, Set<Buff> buffs, Set<Buff> debuffs) {
 		super(name, color, type, description);
 		this.energyCost = energyCost;
 		this.baseDmg = baseDmg;
@@ -101,6 +116,7 @@ public class AttackCard extends Card {
 		this.cardsDraw = cardsDraw;
 		this.cardsDiscarted = cardsDiscarted;
 		this.buffs = buffs;
+		this.debuffs = debuffs;
 	}
 	public int damage(int currentStr, int currentBlock) {
 		return this.baseDmg + this.blockScaling * currentBlock + this.strScaling * currentStr ;
@@ -126,18 +142,20 @@ public class AttackCard extends Card {
 		this.blockGain = 0;
 		this.cardsDraw = 0;
 		this.cardsDiscarted = 0;
-		this.buffs = new ArrayList<>();
+		this.buffs = new HashSet<>();
+		this.debuffs = new HashSet<>();
 		
 	}
 	@Override
 	public Object clone() {
 		// TODO Auto-generated method stub
-		return null;
+		return new AttackCard(name,color,type,description, energyCost, baseDmg, strScaling, blockScaling, numHits, blockGain, cardsDraw, cardsDiscarted, buffs, debuffs);
+		
 	}
 	@Override
 	public void copyStats(Card c) {
 		// TODO Auto-generated method stub
-		
+		//Terminar esto
 	}
 	
 	
