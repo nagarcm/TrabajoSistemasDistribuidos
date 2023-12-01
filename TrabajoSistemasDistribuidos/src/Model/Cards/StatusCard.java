@@ -1,7 +1,9 @@
 package Model.Cards;
 
 public class StatusCard extends Card {
-
+	
+	
+	
 	@Override
 	public Object clone() {
 		// TODO Auto-generated method stub

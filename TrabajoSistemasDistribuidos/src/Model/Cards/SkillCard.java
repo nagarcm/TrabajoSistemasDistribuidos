@@ -5,11 +5,11 @@ import Model.basics.*;
 
 import Model.Buffs.Buff;
 
-import Model.Buffs.Buff;
+
 
 public class SkillCard extends Card {
 	
-	 int energyCost;
+	protected int energyCost;
 	protected int blockGain;
 	protected int energyGain;
 	
@@ -200,12 +200,6 @@ public class SkillCard extends Card {
 	public void played() {
 		// TODO Auto-generated method stub
 
-	}
-
-	@Override
-	public void reset() {
-		// TODO Auto-generated method stub
-		CardManager.resetCard(this);
 	}
 
 	@Override

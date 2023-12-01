@@ -126,13 +126,11 @@ public class AttackCard extends Card {
 		// TODO Auto-generated method stub
 		
 	}
-	@Override 
-	public void reset() {
-		
-	}
+
 	public AttackCard(String name, CardColor color, CardType type, String description, int energyCost, int baseDmg,
 			int strScaling, int blockScaling) {
 		super(name, color, type, description);
+		
 		this.energyCost = energyCost;
 		this.baseDmg = baseDmg;
 		this.strScaling = strScaling;
@@ -155,7 +153,27 @@ public class AttackCard extends Card {
 	@Override
 	public void copyStats(Card c) {
 		// TODO Auto-generated method stub
-		//Terminar esto
+		if (c instanceof AttackCard) {
+			AttackCard attack = (AttackCard) c;
+			this.energyCost = attack.energyCost;
+			this.baseDmg = attack.baseDmg;
+			this.strScaling = attack.strScaling;
+			this.blockScaling = attack.blockScaling;
+			
+			this.numHits = attack.numHits;
+			this.blockGain = attack.blockGain;
+			this.cardsDraw = attack.cardsDraw;
+			this.cardsDiscarted = attack.cardsDiscarted;
+			this.buffs.clear();
+			this.debuffs.clear();
+			for (Buff b: attack.buffs) {
+				this.buffs.add(b);
+			}
+			for (Buff b : attack.debuffs) {
+				this.debuffs.add(b);			
+			}
+
+		}
 	}
 	
 	

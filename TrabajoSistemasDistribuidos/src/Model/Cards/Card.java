@@ -8,8 +8,8 @@ public abstract class Card {
 	public static HashMap<String, Integer> NumberOfCopy = new HashMap<String, Integer>();
 	public static Set<Card> allCards = new HashSet<Card>();
 	
-	protected String name; //ID de la carta
-	protected int numberCopy;
+	protected String name; //ID of any type of card
+	protected int numberCopy; //name + numCopy ID of the instance of card
 	protected CardColor color;
 	protected CardType type;
 	protected String description;
@@ -62,10 +62,7 @@ public abstract class Card {
 		this.mods = new HashSet<>();
 	}
 	public Card() { }
-	
-	
-	
-	
+
 	@Override
 	public boolean equals(Object c) {
 		if (c instanceof Card) {
@@ -99,10 +96,15 @@ public abstract class Card {
 	public boolean haveMod(CardMod e) {
 		return this.mods.contains(e);
 	}
+
+	public void reset() {
+		
+		CardManager.resetCard(this);
+	}
+
 	@Override
 	public abstract Object clone();
 	public abstract void played();
-	public abstract void reset();
 	public abstract void copyStats(Card c);
-	//fin de la clase
+	//end of the class
 }
