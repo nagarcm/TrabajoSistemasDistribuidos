@@ -6,4 +6,5 @@ import Model.Effects.Action;
 
 public interface IPerformableAtEvent {
 	public List<Action> performAt(EventType e); 
+	public boolean isPerformableAt(EventType e);
 }

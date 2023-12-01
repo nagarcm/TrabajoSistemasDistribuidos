@@ -1,10 +1,17 @@
 package Model.Cards;
 
+import java.io.Serializable;
 import java.util.*;
 
 import Model.basics.*;
 
-public abstract class Card {
+public abstract class Card implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	public static HashMap<String, Integer> NumberOfCopy = new HashMap<String, Integer>();
 	public static Set<Card> allCards = new HashSet<Card>();
 	
@@ -106,5 +113,9 @@ public abstract class Card {
 	public abstract Object clone();
 	public abstract void played();
 	public abstract void copyStats(Card c);
+	
+	
+	
+	
 	//end of the class
 }
