@@ -5,7 +5,7 @@ import java.util.*;
 
 import Model.basics.*;
 
-public abstract class Card implements Serializable {
+public abstract class Card implements Serializable{
 	
 	/**
 	 * 
@@ -21,8 +21,9 @@ public abstract class Card implements Serializable {
 	protected CardType type;
 	protected String description;
 	
-	protected Set<EventType> events;
+	
 	protected Set<CardMod> mods;
+	
 	
 	public String getName() {
 		return name;
@@ -65,7 +66,7 @@ public abstract class Card implements Serializable {
 			Card.NumberOfCopy.put(name, 1);
 			this.numberCopy =1;
 		}
-		this.events = new HashSet<EventType>();
+		
 		this.mods = new HashSet<>();
 	}
 	public Card() { }
@@ -78,18 +79,7 @@ public abstract class Card implements Serializable {
 			return false;
 		}
 	}
-	public Set<EventType> getEvents() {
-		return events;
-	}
-	public void addEvent(EventType e) {
-		this.events.add(e);
-	}
-	public void removeEvent(EventType e) {
-		this.events.remove(e);
-	}
-	public boolean canReactEvent(EventType e) {
-		return this.events.contains(e);
-	}
+
 	
 	public Set<CardMod> getMods() {
 		return mods;

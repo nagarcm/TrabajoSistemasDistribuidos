@@ -8,6 +8,11 @@ import Model.Buffs.Buff;
 
 
 public class AttackCard extends Card {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private int energyCost;
 	
 	private int baseDmg;

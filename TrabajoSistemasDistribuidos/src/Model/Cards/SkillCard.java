@@ -9,7 +9,12 @@ import Model.Buffs.Buff;
 
 public class SkillCard extends Card {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	protected int energyCost;
+	
 	protected int blockGain;
 	protected int energyGain;
 	
@@ -226,11 +231,9 @@ public class SkillCard extends Card {
 			for (Buff b : skillCard.buffsSelf) {
 				this.buffsSelf.add((Buff)b.clone());
 			}
-			
 			for (Buff b : skillCard.debuffEnemy) {
 				this.debuffEnemy.add(b);
 			}
-
 			this.nameCardToAdd = skillCard.nameCardToAdd;
 		}
 

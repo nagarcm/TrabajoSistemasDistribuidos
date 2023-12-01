@@ -11,32 +11,24 @@ public class Buff {
 		super();
 		this.name = name;
 	}
-
 	public String getName() {
 		return name;
 	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
-
 	public int getTurnsLeft() {
 		return turnsLeft;
 	}
-
 	public void setTurnsLeft(int turnsLeft) {
 		this.turnsLeft = turnsLeft;
 	}
-
 	public int getValue() {
 		return value;
 	}
-
 	public void setValue(int value) {
 		this.value = value;
 	}
-	
-	
 	public Buff(String name, int turnsLeft, int value) {
 		super();
 		this.name = name;
