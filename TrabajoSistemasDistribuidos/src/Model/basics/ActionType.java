@@ -4,5 +4,5 @@ package Model.basics;
 //do not have functional programming such predicates so I do not have time to implement this in any other way
 
 public enum ActionType {
-	Poison, Weak, Vulnerable, Frail, Damage, Block, 
+	ApplyPoison, ApplyWeak, ApplyVulnerable, ApplyFrail, ApplyDamage, ApplyBlock, Draw;
 }
