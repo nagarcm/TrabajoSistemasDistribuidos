@@ -1,4 +1,4 @@
-package Model.basics;
+package model;
 
 public enum EventType {
 	DamageTaken, DamageDeal, ShieldSelfObtained, ShieldSelfBroken, ShieldEnemyBroken, ShieldEnemyHit,

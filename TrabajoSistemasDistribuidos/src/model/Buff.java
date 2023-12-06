@@ -1,4 +1,4 @@
-package Model.Buffs;
+package model;
 
 //import Model.Characters.GameCharacter;
 
