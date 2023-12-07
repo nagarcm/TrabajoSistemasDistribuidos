@@ -35,10 +35,10 @@ public abstract class Card implements Serializable{
 	public void setColor(CardColor color) {
 		this.color = color;
 	}
-	public CardType getCard() {
+	public CardType getCardType() {
 		return this.type;
 	}
-	public void setCard(CardType type) {
+	public void setCardType(CardType type) {
 		this.type = type;
 	}
 	public String getDescription() {
@@ -50,6 +50,8 @@ public abstract class Card implements Serializable{
 	public int getNumberCopy() {
 		return this.numberCopy;
 	}
+
+
 	
 	/***********************************************************************************************************************/
 	public Card(String name, CardColor color, CardType type, String description) {

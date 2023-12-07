@@ -6,6 +6,7 @@ public class GameCharacter implements ITurnReset {
 	private String name;
 	private int hp;
 	private int block;
+	private int energy;
 	
 	private List<Relic> relics;
 	private CharacterStance stance;
@@ -32,12 +33,17 @@ public class GameCharacter implements ITurnReset {
 		this.stance = CharacterStance.Neutral;
 		this.buffs = new ArrayList<>();
 		this.lastCardPlayed = null;
-		
+
+
+
 		this.deck = new CardContainer();
 		this.hand = new CardContainer();
 		this.drawPile = new CardContainer();
 		this.discardPile = new CardContainer();
 		this.exhaustPile = new CardContainer();
+		this.drawPile.setAuxiliarCardSource(this.discardPile);
+		this.hand.setAuxiliarCardDiscard(this.discardPile);
+		this.hand.setLimitCardAmount(10) ;
 		
 		this.turn = new TurnData();
 		this.combat = new CombatData();
@@ -68,7 +74,21 @@ public class GameCharacter implements ITurnReset {
 			//Bypassed block
 		}
 	}
-
+	public void addBlock(int block){
+		this.block += block;
+	}
+	public int getEnergy() {
+		return this.energy;
+	}
+	public void setEnergy(int energy) {
+		this.energy = energy;
+	}
+	public void addEnergy(int energyInc){
+		this.energy += energyInc;
+	}
+	public void consumeEnergy(int energyConsume){
+		this.energy -= energyConsume;
+	}
 
 	public List<Relic> getRelics() {
 		return relics;
@@ -171,11 +191,19 @@ public class GameCharacter implements ITurnReset {
 		return combat;
 	}
 	
-	//Methods
+	/********************************        Methods        ********************************/
 	
 	@Override
 	public void turnReset() {
+		this.turn.reset();
 		//do stuff when the turn ends;
+		this.discardPile.addAll(this.hand.takeAllNonRetained());
+		//DEberia añadir una clase debuff container para gestionar toda la logica de buffs y que este manejase
+		//el efecto del paso del turno de cada buff/debuff
+	}
+	public void turnStart(){
+		this.hand.addAll(this.drawPile.drawCards(5));
+		this.energy = 3;
 	}
 	public void addMantra(int mantra) {
 		int previousMantra = this.combat.getMantra();
@@ -225,6 +253,7 @@ public class GameCharacter implements ITurnReset {
 		}
 		return dmg;
 	}
-	
-	
+
+
+
 }

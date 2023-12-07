@@ -1,5 +1,7 @@
 package logic;
 
+import model.*;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -15,21 +17,28 @@ public class GameHost extends Thread{
     private int port1;
     private int port2;
     private boolean keepPlaying;
+    private boolean gameEnd;
+    private boolean endTurn;
     private GameClient activePlayer;
     private GameClient pasivePlayer;
     private ExecutorService pool;
+
+
 
 
     public GameHost(ExecutorService pool){
         this.pool = pool;
         this.port1 = 0;
         this.port2 = 0;
+        this.keepPlaying=true;
+        this.gameEnd=false;
     }
     public GameHost(){
         this.pool = Executors.newCachedThreadPool();
         this.port1 = 0;
         this.port2 = 0;
-
+        this.keepPlaying=true;
+        this.gameEnd=false;
     }
     public int getPort1() {
         return port1;
@@ -66,20 +75,23 @@ public class GameHost extends Thread{
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+        //CHECK! : He metido el while keeping playing dentro del try porque tiene sentido en la estructura de
+        //partidas pero igual luego causa problemas (Es para conservar los sockets si van a seguir jugando las mismas personas)
+        try (ServerSocket serverSocket = new ServerSocket(0);) {
 
-        try(ServerSocket serverSocket = new ServerSocket(0);){
-            while (this.keepPlaying){
-                try{
-                    this.port1 = serverSocket.getLocalPort();
-                    this.activePlayer = new GameClient(serverSocket.accept());
-                    this.pasivePlayer = new GameClient(serverSocket.accept());
+            try {
+                this.port1 = serverSocket.getLocalPort();
+                this.activePlayer = new GameClient(serverSocket.accept());
+                this.pasivePlayer = new GameClient(serverSocket.accept());
+                while (this.keepPlaying) {
                     this.playGame();
-
-                }catch(IOException io){
-                    io.printStackTrace();
                 }
+            } catch (IOException io) {
+                //Problemas de conexion con un jugador
+                io.printStackTrace();
             }
-        } catch (IOException io){
+
+        } catch (IOException io) {
             io.printStackTrace();
         }
 
@@ -88,17 +100,36 @@ public class GameHost extends Thread{
 
     }
 
-    public void playGame(){
+    private void playGame() throws IOException{
+        //Play 1 game (match)
         Random random = new Random();
+        DataUpdate updateActive, updatePasive;
+        PlayerAction playerAction;
+        this.endTurn = false;
         if (random.nextInt()%2==0){this.switchPlayers();}
+        //Inicializar partida
+        this.activePlayer.initializeMatch();
+        this.pasivePlayer.initializeMatch();
+        activePlayer.startTurn();
 
-
-
-
-
-
-
-
+        while(!this.gameEnd){
+            //Logica de turno
+            this.activePlayer.startTurn();
+            while(!endTurn) {//Mientras que el usuario no termine el turno no cambiamos de jugador activo
+                //Antes de la accion del usuario enviamos un resumen con el estado actual de la partida
+                updateActive = this.generateUpdate(false, 0, 0, 0);
+                updatePasive = updateActive.invertData();
+                activePlayer.send(updateActive);
+                pasivePlayer.send(updateActive);
+                //Recibimos la accion del usuario y la procesamos
+                playerAction = activePlayer.recibe();
+                this.processAction(playerAction);
+                //Permanecemos en el bucle si no ha terminado el turno
+            }
+            //Terminamos turno y cambiamos de jugador activo
+         this.activePlayer.endTurn();
+         this.switchPlayers();
+        }
     }
     private void switchPlayers(){
         GameClient aux;
@@ -106,6 +137,57 @@ public class GameHost extends Thread{
         activePlayer = pasivePlayer;
         pasivePlayer = aux;
     }
+    private DataUpdate generateUpdate(boolean endGame,int dmgPerHit, int numHits,int blockGain){
+        return new DataUpdate(endGame, true, Target.Self, dmgPerHit, numHits, 0, blockGain,
+                false, null,null,this.pasivePlayer.getCharacter().getHp(),this.pasivePlayer.getCharacter().getBlock(),pasivePlayer.getCharacter().getStance(),
+                this.activePlayer.getCharacter().getHp(),this.activePlayer.getCharacter().getBlock(), activePlayer.getCharacter().getStance(),activePlayer.getCharacter().getEnergy(),activePlayer.getCharacter().getHand().getAllCards());
+    }
+
+    private void processAction(PlayerAction playerAction){
+        this.endTurn = playerAction.isEndTurn();
+        if (!this.endTurn){
+            switch (playerAction.getPlayedCard().getCardType()){
+                case Attack -> processAttack((AttackCard) playerAction.getPlayedCard());
+                case Skill -> processSkill((SkillCard) playerAction.getPlayedCard());
+                case Power -> processPower(null);
+                case Curse -> processCurse(null);
+                case Status -> processStatus(null);
+            }
+        }
+        //Do stuff
+    }
+    private void processAttack(AttackCard attack){
+        /**********************************                   CONTINUE: Corregir esto para que si el coste es -1, consuma toda la energia  */
+        GameCharacter gc = activePlayer.getCharacter();
+        //Mecanica basica de hace daño
+        int hits = attack.getNumHits();
+        int dmg = gc.calculateCardDamage(attack);
+        for (int n = 0; n<hits;n++){
+            gc.takeDamage(dmg);
+        }
+        //Agregamos escudo si corresponde
+        gc.addBlock(attack.getBlockGain());
+        //Robamos o descartamos las cartas que correspondan
+
+        //cambiamos la postura del personaje
+
+        //consumimos la energia;
+    }
+    private void processSkill(SkillCard skill){
+
+    }
+
+    //Estos seran implementados en futuras versiones
+    private void processPower(Card power){
+
+    }
+    private void processStatus(StatusCard status){
+
+    }
+    private void processCurse(Card curse){
+
+    }
+
 
 }
 

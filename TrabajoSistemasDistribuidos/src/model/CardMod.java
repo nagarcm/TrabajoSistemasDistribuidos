@@ -3,7 +3,7 @@ package model;
 import java.util.*;
 
 public enum CardMod {
-	Exhaust(1), Innate(2), Ethereal(4), Unplayable(8);
+	Exhaust(1), Innate(2), Ethereal(4), Unplayable(8), Retain(16);
 
 	private int value;
 
@@ -17,9 +17,12 @@ public enum CardMod {
 
 	public static List<CardMod> getMods(int n) {
 		ArrayList<CardMod> al = null;
-		if (n >= 0 && n < 16) {
+		if (n >= 0 && n < 32) {
 			al = new ArrayList<>();
-
+			if(n >= 16){
+				n-=16;
+				al.add(Retain);
+			}
 			if (n >= 8) {
 				n -= 8;
 				al.add(Unplayable);

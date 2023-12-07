@@ -4,6 +4,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Game {
+    //Main game class, instances the server if necesary, play the game
 
     private String ip;
     private int port;

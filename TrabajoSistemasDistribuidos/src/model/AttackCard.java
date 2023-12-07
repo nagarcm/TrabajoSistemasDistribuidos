@@ -10,18 +10,20 @@ public class AttackCard extends Card {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private int energyCost;
-	
-	private int baseDmg;
-	private int strScaling;
-	private int blockScaling;
-	private int numHits;
-	
-	private int blockGain;
-	private int cardsDraw;
-	private int cardsDiscarted;
-	private Set<Buff> buffs;
-	private Set<Buff> debuffs;
+	protected int energyCost;
+
+	protected int baseDmg;
+	protected int strScaling;
+	protected int blockScaling;
+	protected int numHits;
+
+	protected int blockGain;
+	protected int cardsDraw;
+	protected int cardsDiscarted;
+	protected CharacterStance stance;
+
+	protected Set<Buff> buffs;
+	protected Set<Buff> debuffs;
 	
 	public int getBaseDmg() {
 		return this.baseDmg;
@@ -79,10 +81,11 @@ public class AttackCard extends Card {
 	public int getCardsDraw() {
 		return cardsDraw;
 	}
-
 	public void setCardsDraw(int cardsDraw) {
 		this.cardsDraw = cardsDraw;
 	}
+	public CharacterStance getStance() {return stance;}
+	public void setStance(CharacterStance stance) {this.stance = stance;}
 
 	public Set<Buff> getBuffs() {
 		return buffs;
@@ -107,7 +110,7 @@ public class AttackCard extends Card {
 	}
 
 	public AttackCard(String name, CardColor color, CardType type, String description, int energyCost, int baseDmg, int strScaling,
-					  int blockScaling, int numHits, int blockGain, int cardsDraw, int cardsDiscarted, Set<Buff> buffs, Set<Buff> debuffs) {
+					  int blockScaling, int numHits, int blockGain, int cardsDraw, int cardsDiscarted, CharacterStance stance, Set<Buff> buffs, Set<Buff> debuffs) {
 		super(name, color, type, description);
 		this.energyCost = energyCost;
 		this.baseDmg = baseDmg;
@@ -117,6 +120,7 @@ public class AttackCard extends Card {
 		this.blockGain = blockGain;
 		this.cardsDraw = cardsDraw;
 		this.cardsDiscarted = cardsDiscarted;
+		this.stance = stance;
 		this.buffs = buffs;
 		this.debuffs = debuffs;
 	}
@@ -149,7 +153,7 @@ public class AttackCard extends Card {
 	@Override
 	public Object clone() {
 		// TODO Auto-generated method stub
-		return new AttackCard(name,color,type,description, energyCost, baseDmg, strScaling, blockScaling, numHits, blockGain, cardsDraw, cardsDiscarted, buffs, debuffs);
+		return new AttackCard(name,color,type,description, energyCost, baseDmg, strScaling, blockScaling, numHits, blockGain, cardsDraw, cardsDiscarted, stance,buffs, debuffs);
 		
 	}
 	@Override
