@@ -2,14 +2,17 @@ package model;
 
 //import Model.Characters.GameCharacter;
 
-public class Buff {
+import java.io.Serializable;
+
+public class Buff implements Serializable {
 	private String name;
 	private int turnsLeft;
 	private int value;
 
-	public Buff(String name) {
+	public Buff(String name, int turnsLeft) {
 		super();
 		this.name = name;
+		this.turnsLeft = turnsLeft;
 	}
 	public String getName() {
 		return name;

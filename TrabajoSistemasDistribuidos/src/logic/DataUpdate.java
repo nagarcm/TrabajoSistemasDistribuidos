@@ -26,6 +26,7 @@ public class DataUpdate {
     private int finalOwnBlock;
     private CharacterStance finalOwnStance;
     private int energy;
+    private Card lastPlayedCard;
 
 
     private List<Card> hand;
@@ -100,10 +101,18 @@ public class DataUpdate {
     public List<Card> getHand(){
         return this.hand;
     }
+
+    public Card getLastPlayedCard() {
+        return lastPlayedCard;
+    }
+
+    public void setLastPlayedCard(Card lastPlayedCard) {
+        this.lastPlayedCard = lastPlayedCard;
+    }
     public DataUpdate(boolean gameEnd, boolean playNextAction, Target user, int damagePerHit,
                       int hits, int reflectDamage, int blockGain, boolean buffsModified,
                       List<Buff> ownBuffs, List<Buff> enemyBuffs, int finalEnemyHP, int finalEnemyBlock, CharacterStance finalEnemyStance,
-                      int finalOwnHP, int finalOwnBlock, CharacterStance finalOwnStance,int energy, List<Card> hand) {
+                      int finalOwnHP, int finalOwnBlock, CharacterStance finalOwnStance, int energy,Card lastPlayedCard, List<Card> hand) {
         this.gameEnd = gameEnd;
         this.playNextAction = playNextAction;
         this.user = user;
@@ -121,13 +130,37 @@ public class DataUpdate {
         this.finalOwnBlock = finalOwnBlock;
         this.finalOwnStance = finalOwnStance;
         this.energy = energy;
+        this.lastPlayedCard = lastPlayedCard;
         this.hand = hand;
     }
 
     public DataUpdate invertData() {
         return new DataUpdate(gameEnd, !playNextAction, (user == Target.Self) ? Target.Enemy : Target.Self, damagePerHit,
-                hits, reflectDamage, blockGain, buffsModified, enemyBuffs, ownBuffs, finalOwnHP, finalOwnBlock, finalOwnStance,finalEnemyHP, finalEnemyBlock, finalEnemyStance, 0, null);
+                hits, reflectDamage, blockGain, buffsModified, enemyBuffs, ownBuffs, finalOwnHP, finalOwnBlock, finalOwnStance,finalEnemyHP, finalEnemyBlock, finalEnemyStance, 0, lastPlayedCard,null);
     }
 
-
+    @Override
+    public String toString() {
+        return "DataUpdate{" +
+                "gameEnd=" + gameEnd +
+                ", playNextAction=" + playNextAction +
+                ", user=" + user +
+                ", damagePerHit=" + damagePerHit +
+                ", hits=" + hits +
+                ", reflectDamage=" + reflectDamage +
+                ", blockGain=" + blockGain +
+                ", buffsModified=" + buffsModified +
+                ", ownBuffs=" + ownBuffs +
+                ", enemyBuffs=" + enemyBuffs +
+                ", finalEnemyHP=" + finalEnemyHP +
+                ", finalEnemyBlock=" + finalEnemyBlock +
+                ", finalEnemyStance=" + finalEnemyStance +
+                ", finalOwnHP=" + finalOwnHP +
+                ", finalOwnBlock=" + finalOwnBlock +
+                ", finalOwnStance=" + finalOwnStance +
+                ", energy=" + energy +
+                ", lastPlayedCard=" + lastPlayedCard +
+                ", hand=" + hand +
+                '}';
+    }
 }

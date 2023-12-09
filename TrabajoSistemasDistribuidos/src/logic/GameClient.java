@@ -1,87 +1,113 @@
 package logic;
+
+import model.AttackCard;
+import model.Card;
+import model.SkillCard;
+import model.StatusCard;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.ArrayList;
-
-import model.*;
+import java.util.*;
 
 public class GameClient {
     private Socket socket;
-    private ObjectOutputStream outputStream;
-    private ObjectInputStream inputStream;
-
-    private GameCharacter character;
-    public GameClient(Socket socket){
-        this.socket = socket;
-        this.character = new GameCharacter("Try", 85);
-        try{
-            this.outputStream = new ObjectOutputStream(socket.getOutputStream());
-            this.inputStream = new ObjectInputStream(socket.getInputStream());
-        } catch (IOException io){
-            io.printStackTrace();
-        }
-    }
+    private ObjectInputStream input;
+    private ObjectOutputStream output;
+    private boolean turn;
+    private DataUpdate lastUpdate;
+    private boolean keepPlaying;
 
     public Socket getSocket() {
         return socket;
     }
+
     public void setSocket(Socket socket) {
         this.socket = socket;
     }
 
-    public GameCharacter getCharacter() {
-        return character;
+    public ObjectInputStream getInput() {
+        return input;
     }
 
-    public void setCharacter(GameCharacter character) {
-        this.character = character;
+    public void setInput(ObjectInputStream input) {
+        this.input = input;
     }
 
     public ObjectOutputStream getOutput() {
-        return outputStream;
-    }
-    //public void setOutputStream(ObjectOutputStream outputStream) {this.outputStream = outputStream;}
-
-    public ObjectInputStream getInput() {
-        return inputStream;
-    }
-    //public void setInputStream(ObjectInputStream inputStream) {this.inputStream = inputStream;}
-
-    public void initializeMatch(){
-        //Mazo Aleatorio de 5 ataques, 5 skills y 5 cartas random (no status ni curses)
-        for (int i = 0; i < 5; i++) {
-            character.getDeck().addCard(CardManager.getRandomCard(CardType.Attack));
-        }
-        for (int i = 0; i < 5; i++) {
-            character.getDeck().addCard(CardManager.getRandomCard(CardType.Skill));
-        }
-        for (int i = 0; i < 5; i++) {
-            character.getDeck().addCard(CardManager.getRandomCard());
-        }
+        return output;
     }
 
-    public void endTurn(){
-        this.character.turnReset();
+    public void setOutput(ObjectOutputStream output) {
+        this.output = output;
+    }
+    public GameClient(Socket socket){
+        this.socket = socket;
+        this.keepPlaying = true;
+        this.turn = false;
     }
 
-    public void startTurn(){
-        this.character.turnStart();
+    public boolean isTurn() {
+        return turn;
     }
-    public boolean endGame(){return this.character.getHp()==0;}
-    public void send(DataUpdate dataUpdate) throws IOException{
-        this.outputStream.writeObject(dataUpdate);
-        this.outputStream.flush();
+
+    public void setTurn(boolean turn) {
+        this.turn = turn;
     }
-    public PlayerAction recibe() throws IOException{
+
+    public DataUpdate getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(DataUpdate lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+
+    public void initialaceStreams(){
         try {
-            return (PlayerAction) this.inputStream.readObject();
-        } catch (ClassNotFoundException classNotFoundException){
-            classNotFoundException.printStackTrace();
+            output = new ObjectOutputStream(socket.getOutputStream());
+            input = new ObjectInputStream(socket.getInputStream());
+        }catch (IOException ioe){
+            ioe.printStackTrace();
         }
-        return null;
+    }
+    public void playGame(){
+        try {//Ponemos el try fuera porque si hay problemas de conexion no tiene sentido tratar de seguir jugando
+            while (keepPlaying){
+                lastUpdate = (DataUpdate) input.readObject();
+                processUpdate(lastUpdate);
+                if (turn){
+                    output.writeObject(this.generateAction());
+                }
+            }
+        }catch (IOException ioe ){
+            ioe.printStackTrace();
+        } catch (ClassNotFoundException cnfe){
+            cnfe.printStackTrace();
+        }
+
     }
 
+    private void processUpdate(DataUpdate update){
+
+    }
+    private PlayerAction generateAction(){
+        //Para pruebas
+        Random r = new Random();
+        int n;
+        while(true){
+            n = r.nextInt();
+            if(n % 3 == 0){
+                return new PlayerAction(true, new AttackCard("",null,"",0,0,0,0));
+            } else{
+                n = n%lastUpdate.getHand().size();
+                Card c = lastUpdate.getHand().get(n);
+                if((c instanceof AttackCard)? ((AttackCard)c).getEnergyCost()<=lastUpdate.getEnergy():((SkillCard)c).getEnergyCost()<=lastUpdate.getEnergy()){
+                    return new PlayerAction(false,c);
+                }
+            }
+        }
+    }
 
 }

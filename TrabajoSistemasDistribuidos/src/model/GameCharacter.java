@@ -198,10 +198,18 @@ public class GameCharacter implements ITurnReset {
 		this.turn.reset();
 		//do stuff when the turn ends;
 		this.discardPile.addAll(this.hand.takeAllNonRetained());
-		//DEberia añadir una clase debuff container para gestionar toda la logica de buffs y que este manejase
+		for ( Buff b : this.buffs){
+			b.setTurnsLeft(b.getTurnsLeft()-1);
+			if (b.getTurnsLeft()==0){
+				buffs.remove(b);
+			}
+		}
+
+		// UPDATE : DEberia añadir una clase debuff container para gestionar toda la logica de buffs y que este manejase
 		//el efecto del paso del turno de cada buff/debuff
 	}
 	public void turnStart(){
+		this.block =0;
 		this.hand.addAll(this.drawPile.drawCards(5));
 		this.energy = 3;
 	}
@@ -252,6 +260,15 @@ public class GameCharacter implements ITurnReset {
 			dmg = 3*dmg;
 		}
 		return dmg;
+	}
+	public void drawCard(){
+		hand.addCard(drawPile.drawCard());
+	}
+	public void discardCard(){
+		discardPile.addCard(hand.drawCard());
+	}
+	public void discardCard(Card card){
+		discardPile.addCard(hand.drawCard(card));
 	}
 
 

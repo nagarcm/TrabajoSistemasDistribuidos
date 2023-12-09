@@ -1,5 +1,6 @@
 package model;
 
+import java.io.Serial;
 import java.util.*;
 
 
@@ -8,6 +9,7 @@ public class SkillCard extends Card {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 1L;
 	protected int energyCost;
 	
@@ -31,21 +33,22 @@ public class SkillCard extends Card {
 	protected String nameCardToAdd;
 	
 	
-	public SkillCard(String name, CardColor color, CardType type, String description, int energyCost, int blockGain,
-					 int energyGain, int cardsDraw, CardSource source, boolean drawSelect, int cardsDiscarted,
-					 boolean discardSelect, CharacterStance stance, String nameCardToAdd) {
+	public SkillCard(String name, CardColor color, String description, int energyCost, int blockGain,
+					 int energyGain, int cardsDraw, int cardsDiscarted ){
 		
-		super(name, color, type, description);
+		super(name, color, CardType.Skill, description);
 		this.energyCost = energyCost;
 		this.blockGain = blockGain;
 		this.energyGain = energyGain;
 		this.cardsDraw = cardsDraw;
-		this.source = source;
-		this.drawSelect = drawSelect;
+		this.source = CardSource.Random;
+		this.drawSelect = false;
 		this.cardsDiscarted = cardsDiscarted;
-		this.discardSelect = discardSelect;
-		this.stance = stance;
-		this.nameCardToAdd = nameCardToAdd;
+		this.discardSelect = false;
+		this.stance = CharacterStance.None;
+		this.nameCardToAdd = null;
+		this.buffsSelf = new HashSet<>();
+		this.debuffEnemy = new HashSet<>();
 	}
 
 
@@ -182,7 +185,7 @@ public class SkillCard extends Card {
 	public void setDebuffEnemy(Set<Buff> debuffEnemy) {
 		this.debuffEnemy = debuffEnemy;
 	}
-	public void addDebuffSelf(Buff debuff) {
+	public void addDebuffEnemy(Buff debuff) {
 		this.debuffEnemy.add(debuff);
 	}
 

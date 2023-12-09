@@ -49,9 +49,19 @@ public class CardManager {
 			}
 		}
 	}
+	public static boolean existCardName(String cardName){
+		return cardCollection.containsKey(cardName) || cursesAndStatus.containsKey(cardName);
+	}
 	
-	
-	
+	public static Card createCardByName(String cardName){
+		Card c = cursesAndStatus.get(cardName);
+		return (c != null) ? c : cardCollection.get(cardName);
+	}
+	public static void addAll(Collection<Card> collection){
+		for (Card c : collection){
+			CardManager.addCard(c);
+		}
+	}
 	
 	
 	

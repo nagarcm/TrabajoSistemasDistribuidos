@@ -18,4 +18,5 @@ public class PlayerAction {
         this.endTurn = endTurn;
         this.playedCard = playedCard;
     }
+
 }

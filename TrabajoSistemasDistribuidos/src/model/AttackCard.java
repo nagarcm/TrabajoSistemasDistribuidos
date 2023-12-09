@@ -109,9 +109,9 @@ public class AttackCard extends Card {
 		this.debuffs.add(debuffs);
 	}
 
-	public AttackCard(String name, CardColor color, CardType type, String description, int energyCost, int baseDmg, int strScaling,
+	public AttackCard(String name, CardColor color, String description, int energyCost, int baseDmg, int strScaling,
 					  int blockScaling, int numHits, int blockGain, int cardsDraw, int cardsDiscarted, CharacterStance stance, Set<Buff> buffs, Set<Buff> debuffs) {
-		super(name, color, type, description);
+		super(name, color, CardType.Attack, description);
 		this.energyCost = energyCost;
 		this.baseDmg = baseDmg;
 		this.strScaling = strScaling;
@@ -133,9 +133,9 @@ public class AttackCard extends Card {
 		
 	}
 
-	public AttackCard(String name, CardColor color, CardType type, String description, int energyCost, int baseDmg,
+	public AttackCard(String name, CardColor color, String description, int energyCost, int baseDmg,
 			int strScaling, int blockScaling) {
-		super(name, color, type, description);
+		super(name, color, CardType.Attack, description);
 		
 		this.energyCost = energyCost;
 		this.baseDmg = baseDmg;
@@ -153,7 +153,7 @@ public class AttackCard extends Card {
 	@Override
 	public Object clone() {
 		// TODO Auto-generated method stub
-		return new AttackCard(name,color,type,description, energyCost, baseDmg, strScaling, blockScaling, numHits, blockGain, cardsDraw, cardsDiscarted, stance,buffs, debuffs);
+		return new AttackCard(name,color,description, energyCost, baseDmg, strScaling, blockScaling, numHits, blockGain, cardsDraw, cardsDiscarted, stance,buffs, debuffs);
 		
 	}
 	@Override
