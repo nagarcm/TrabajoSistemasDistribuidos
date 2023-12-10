@@ -1,10 +1,17 @@
 package logic;
 
 import model.*;
+
+import java.io.Serializable;
 import java.util.*;
 
-public class DataUpdate {
-    private boolean gameEnd;
+public class DataUpdate implements Serializable{
+    /**
+	 * 
+	 */
+	private boolean lastUpdate;
+	private static final long serialVersionUID = 1L;
+	private boolean gameEnd;
     private boolean playNextAction;
 
     private Target user;
@@ -31,7 +38,16 @@ public class DataUpdate {
 
     private List<Card> hand;
 
-    public boolean isGameEnd() {
+    
+    public boolean isLastUpdate() {
+		return lastUpdate;
+	}
+
+	public void setLastUpdate(boolean lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
+
+	public boolean isGameEnd() {
         return gameEnd;
     }
 
@@ -132,6 +148,7 @@ public class DataUpdate {
         this.energy = energy;
         this.lastPlayedCard = lastPlayedCard;
         this.hand = hand;
+        this.lastUpdate=false;
     }
 
     public DataUpdate invertData() {
@@ -141,26 +158,48 @@ public class DataUpdate {
 
     @Override
     public String toString() {
-        return "DataUpdate{" +
-                "gameEnd=" + gameEnd +
-                ", playNextAction=" + playNextAction +
-                ", user=" + user +
-                ", damagePerHit=" + damagePerHit +
-                ", hits=" + hits +
-                ", reflectDamage=" + reflectDamage +
-                ", blockGain=" + blockGain +
-                ", buffsModified=" + buffsModified +
-                ", ownBuffs=" + ownBuffs +
-                ", enemyBuffs=" + enemyBuffs +
-                ", finalEnemyHP=" + finalEnemyHP +
-                ", finalEnemyBlock=" + finalEnemyBlock +
-                ", finalEnemyStance=" + finalEnemyStance +
-                ", finalOwnHP=" + finalOwnHP +
-                ", finalOwnBlock=" + finalOwnBlock +
-                ", finalOwnStance=" + finalOwnStance +
-                ", energy=" + energy +
-                ", lastPlayedCard=" + lastPlayedCard +
-                ", hand=" + hand +
-                '}';
+    	StringBuilder sb = new StringBuilder();
+    	
+    	sb.append("Estado Actual de la partida: \n Tu:\nHP:");
+    	sb.append(this.finalOwnHP);sb.append("\t\t");
+    	sb.append("Block: ");sb.append(this.finalOwnBlock);sb.append("\t\t");
+    	sb.append("Stance: ");sb.append(this.finalOwnStance);sb.append("\n");
+    	sb.append("Buffs: ");
+    	if(this.ownBuffs!=null) {
+    		for(Buff b : this.ownBuffs) {
+        		sb.append(b.toString());
+        	}
+    	}else {
+    		System.out.println("No buffs");
+    	}
+    	
+    	
+    	
+    	sb.append("\n\nEnemigo:\nHP:");
+    	sb.append(this.finalEnemyHP);sb.append("\t\t");
+    	sb.append("Block: ");sb.append(this.finalEnemyBlock);sb.append("\t\t");
+    	sb.append("Stance: ");sb.append(this.finalEnemyStance);sb.append("\n");
+    	sb.append("Buffs: ");
+    	if(this.enemyBuffs!=null) {
+    		for(Buff b : this.enemyBuffs) {
+        		sb.append(b.toString());
+        	}
+    	}else {
+    		System.out.println("No buffs");
+    	}
+    	
+    	if(this.playNextAction) {
+    		sb.append("\nTu turno:\nEnergia: ");sb.append(this.energy);
+    		sb.append("\n0. Finalizar turno.\n");
+    		for (int i= 1; i<=this.hand.size();i++) {
+    			
+    			sb.append(i);sb.append(". ");sb.append(hand.get(i-1).toString());
+    			sb.append("\n");
+    		}
+    	}else {
+    		sb.append("\nTurno del rival\nEsperando al rival...");
+    	}
+
+        return sb.toString();
     }
 }

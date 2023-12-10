@@ -210,7 +210,9 @@ public class GameCharacter implements ITurnReset {
 	}
 	public void turnStart(){
 		this.block =0;
+		System.out.println("si");
 		this.hand.addAll(this.drawPile.drawCards(5));
+		System.out.println("no");
 		this.energy = 3;
 	}
 	public void addMantra(int mantra) {
@@ -224,6 +226,30 @@ public class GameCharacter implements ITurnReset {
 	//
 	//
 	public void takeDamage(int dmg) {
+		for (Buff b : this.buffs) {
+			if (b.getName().equals("Vulnerable")) {
+				dmg = dmg +(dmg/2);
+			}
+		}
+		
+		
+		if(this.block<dmg) {
+			this.block-=dmg;
+			this.hp+=this.block;
+			this.block=0;
+		}else {
+			this.block-=dmg;
+		}
+		
+		if(this.hp<0) {
+			this.hp=0;
+		}
+		if(this.block<0) {
+			this.block=0;
+		}
+		
+		
+		/*
 		for (Buff b : this.buffs) {
 			if (b.getName().equals("Vulnerable")) {
 				dmg += dmg / 2;
@@ -247,7 +273,7 @@ public class GameCharacter implements ITurnReset {
 			//I do this in this way because in the future I want to implement some relics 
 			//that have specific behavior when you bypass foe's block
 			this.setBlock(0);
-		}
+		}*/
 	}
 	
 	public int calculateCardDamage(AttackCard c) {

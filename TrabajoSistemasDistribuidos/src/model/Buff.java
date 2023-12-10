@@ -5,6 +5,10 @@ package model;
 import java.io.Serializable;
 
 public class Buff implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3060950808585650399L;//Se guardo con esto y no quiero volver a hacer toda la base de datos
 	private String name;
 	private int turnsLeft;
 	private int value;
@@ -42,6 +46,10 @@ public class Buff implements Serializable {
 	@Override
 	public Object clone() {
 		return new Buff(name, turnsLeft, value);
+	}
+	@Override
+	public String toString() {
+		return this.name + " for "+ this.turnsLeft+ " turns.";
 	}
 	
 }

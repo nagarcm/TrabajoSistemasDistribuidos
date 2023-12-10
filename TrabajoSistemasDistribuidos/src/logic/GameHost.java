@@ -2,6 +2,7 @@ package logic;
 
 import jdk.jshell.spi.ExecutionControl;
 import model.*;
+import persistence.Persistencia;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -61,9 +62,14 @@ public class GameHost extends Thread{
 
     @Override
     public void run(){
-
+    	System.out.println("Inicializado el Host en otro hilo");
+    	//Dado que este es el ordenador donde se hosteara el juego, inicializamos el card manager con la coleccion de cartas que tomemos de persistencia.
+    	Persistencia.initialiceData();
+        CardManager.addAll(Persistencia.getAllCards());
+        System.out.println("Datos de las cartas iniciados");
         try {
             this.ip = InetAddress.getLocalHost().getHostAddress();
+            System.out.println("Ip asignada");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -73,8 +79,8 @@ public class GameHost extends Thread{
             // Lo hacemos aqui porque tras finalizar la(s) partida(s) queremos finalizar la conexion con el cliente
             try {
                 //para pruebas
-                System.out.println("IP: " + ip);
-                System.out.println("PORT: " + serverSocket.getLocalPort());
+//                System.out.println("IP: " + ip);
+//                System.out.println("PORT: " + serverSocket.getLocalPort());
                 this.port = serverSocket.getLocalPort();
                 //Conexion con ambos clientes
                 this.activePlayer = new HostClient(serverSocket.accept());
@@ -96,6 +102,7 @@ public class GameHost extends Thread{
     }
 
     private void playGame() throws IOException{//hacemos throw para agrupar las excepciones de conexion con clientes
+    	System.out.println("StartGame");
         int turn =0;
         //Play 1 game (match)
         Random random = new Random();
@@ -106,7 +113,7 @@ public class GameHost extends Thread{
         this.activePlayer.initializeMatch();
         this.pasivePlayer.initializeMatch();
         activePlayer.startTurn();
-
+        System.out.println("PreLoop");
         while(!this.gameEnd){
             System.out.println("Turno "+turn);
             //Logica de turno
@@ -130,14 +137,20 @@ public class GameHost extends Thread{
          this.switchPlayers();
          turn++;
         }
-        activePlayer.send(this.finalUpdate());//Mandamos el final de la partida este esta identificado por endGame = true,PlaynextAction = true y Target = null
-        pasivePlayer.send(this.finalUpdate());
-
+        DataUpdate d = this.generateUpdate(true, 0, 0, 0);
+        d.setLastUpdate(true);
+        
+        activePlayer.send(d);//Mandamos el final de la partida este esta identificado por endGame = true,PlaynextAction = true y Target = null
+        d = d.invertData();
+        d.setLastUpdate(true);
+        pasivePlayer.send(d);
+/*
         playerAction = activePlayer.recibe();
         this.keepPlaying = this.keepPlaying && playerAction.isEndTurn() && playerAction.getPlayedCard()==null;
         //Si el jugador ha devuelto turnEnd =true <<Y>> carta nula continuamos jugando
         playerAction = pasivePlayer.recibe();
-        this.keepPlaying = this.keepPlaying && playerAction.isEndTurn() && playerAction.getPlayedCard()==null;
+        this.keepPlaying = this.keepPlaying && playerAction.isEndTurn() && playerAction.getPlayedCard()==null;*/
+        this.keepPlaying=false;
     }
     private void switchPlayers(){
         HostClient aux;
@@ -161,6 +174,8 @@ public class GameHost extends Thread{
         this.endTurn = playerAction.isEndTurn();
         if (!this.endTurn){
             this.lastPlayed = playerAction.getPlayedCard();
+            this.activePlayer.getCharacter().getHand().removeCard(lastPlayed);
+            this.activePlayer.getCharacter().getDiscardPile().addCard(lastPlayed);
             switch (playerAction.getPlayedCard().getCardType()){
                 case Attack -> processAttack((AttackCard) playerAction.getPlayedCard());
                 case Skill -> processSkill((SkillCard) playerAction.getPlayedCard());
@@ -169,10 +184,10 @@ public class GameHost extends Thread{
                 //case Status -> processStatus(null);
             }
         }
+        this.gameEnd = this.activePlayer.getCharacter().getHp()==0 || this.pasivePlayer.getCharacter().getHp()==0;
         //Do stuff
     }
-    private void processAttack(AttackCard attack){
-        /**********************************                   CONTINUE: Corregir esto para que si el coste es -1, consuma toda la energia  */
+    private void processAttack(AttackCard attack){      
 
         GameCharacter gc = activePlayer.getCharacter();
         int hits = attack.getNumHits();
@@ -184,8 +199,9 @@ public class GameHost extends Thread{
         //Mecanica basica de hace daño
 
         int dmg = gc.calculateCardDamage(attack);
+        
         for (int n = 0; n<hits;n++){
-            gc.takeDamage(dmg);
+        	pasivePlayer.getCharacter().takeDamage(dmg);
         }
         //Agregamos escudo si corresponde
         gc.addBlock(attack.getBlockGain());
@@ -198,7 +214,7 @@ public class GameHost extends Thread{
             gc.discardCard();
         }
         //cambiamos la postura del personaje
-        if(attack.getStance()!=CharacterStance.None && gc.getStance() != attack.getStance()){
+        if(attack.getStance()!=null && attack.getStance()!=CharacterStance.None && gc.getStance() != attack.getStance()){
             gc.setStance(attack.getStance());
             //Evento de cambio de postura
         }
@@ -279,71 +295,3 @@ public class GameHost extends Thread{
         throw new ExecutionControl.NotImplementedException("This function its not implement yet");
     }
 }
-
-/*
-	Juego
-
-	Servidor
-	2 clientes
-
-	Partida con varias rondas
-
-	El servidor tiene una lista de palabras ("pala1", "pala2", "pala3", etc)
-	Coge 3 palabras al azar
-
-	3 rondas, 1 palabra por ronda
-
-	Servidor la manda a clientes
-	Clientes muestran por pantalla y los jugadores tienen que escribirla
-	Si aciertan, esperan a la siguiente ronda y guardan el tiempo por rondas
-	Si fallan, reintentan hasta acertar
-
-	Al final de las 3 rondas: el servidor manda por XML el resultado a los clientes (el ganador)
-
-
-	Partida: 3 palabras para las rondas, los dos clientes, tiempos cliente-ronda
-
-
-	parte de servidor:
-
-	clase main {
-		SS / pool hilos
-
-
-		while (abierto){
-			p = new Partida···;
-
-			while (p.jugadores.size() < p.max) {
-				GestorCliente g = new gestorCliente(ss.accept(), p);
-			}
-		}
-
-	}
-
-	Clase Partida {
-		datos;
-		Lista<Socket> jugadores;
-		Mapa<Socket, Lista<Long>> resultados;
-		int maximo;
-		bool empa;
-
-
-		boolean meterJugador(Socket s) {
-			jugadores.add(s);
-			resultados.put(s, new Lista<Long>());
-		}
-
-		boolean meterResultado(Socket jugador, long tiempo) {
-			resultados.get(jugador).add(tiempo);
-		}
-	}
-
-	Clase GestorCliente extends Thread {
-		Partida p;
-		Socket s;
-
-	}
-
-
-
- */

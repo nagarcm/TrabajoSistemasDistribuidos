@@ -14,7 +14,7 @@ public class HostClient {
     private GameCharacter character;
     public HostClient(Socket socket){
         this.socket = socket;
-        this.character = new GameCharacter("Player", 5);//75);
+        this.character = new GameCharacter("Player", 75);//75);
 
     }
     public void initializeStream(){
@@ -62,6 +62,8 @@ public class HostClient {
         for (int i = 0; i < 10; i++) {
             character.getDeck().addCard(CardManager.getRandomCard());
         }
+
+        this.character.getDrawPile().addAll(this.getCharacter().getDeck().getAllCards());
     }
 
     public void endTurn(){
@@ -73,11 +75,13 @@ public class HostClient {
     }
     public boolean endGame(){return this.character.getHp()==0;}
     public void send(DataUpdate dataUpdate) throws IOException{
+    	this.outputStream.reset();
         this.outputStream.writeObject(dataUpdate);
         this.outputStream.flush();
     }
     public PlayerAction recibe() throws IOException{
         try {
+
             return (PlayerAction) this.inputStream.readObject();
         } catch (ClassNotFoundException classNotFoundException){
             classNotFoundException.printStackTrace();

@@ -181,7 +181,19 @@ public class AttackCard extends Card {
 
 		}
 	}
-	
-	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder(this.name);
+		for(CardMod cm : this.mods) {
+			sb.append(". ");
+			sb.append(cm);
+			sb.append(" ");
+		}
+		sb.append(" Energy Cost: ");
+		sb.append(this.energyCost);
+		sb.append(" Description: ");
+		sb.append(this.description);
+		return sb.toString();
+	}
 
 }

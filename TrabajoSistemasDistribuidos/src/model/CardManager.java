@@ -12,8 +12,7 @@ public class CardManager {
 
 	public static Card getRandomCard(){
 		Set<String> set = cardCollection.keySet();
-		int n = random.nextInt() % set.size();
-		return (Card) cardCollection.get((String)set.toArray()[n]).clone();
+		return (Card) cardCollection.get((String)set.toArray()[random.nextInt(set.size())]).clone();
 	}
 	public static Card getRandomCard(CardType ct){
 		Collection<Card> cards = cardCollection.values();
@@ -23,8 +22,9 @@ public class CardManager {
 				ar.add(c);
 			}
 		}
-		//Suponemos que existe almenos 1 carta de
-		return (Card) ar.get(random.nextInt()%ar.size()).clone();
+		//Suponemos que existe almenos 1 carta del tipo introducido
+		Card c = (Card) ar.get(random.nextInt(ar.size())).clone();
+		return c;
 	}
 
 	public static void addCard(Card c){

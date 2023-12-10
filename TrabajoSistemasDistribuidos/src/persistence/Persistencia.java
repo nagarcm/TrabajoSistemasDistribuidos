@@ -18,6 +18,7 @@ public class Persistencia {
 
     public static void initialiceData(){
         if (cards == null){
+
             updateData();
         }
     }
@@ -27,15 +28,20 @@ public class Persistencia {
             ObjectInputStream oi = new ObjectInputStream(new FileInputStream(dataPath));
             Card c;
             c = (Card) oi.readObject();
-            while (c!=null){
+            while (!c.getName().equalsIgnoreCase("Miracle")){
                 cards.add(c);
+                c = (Card) oi.readObject();
             }
-
+            cards.add(c);
         } catch (FileNotFoundException e) {
+        	e.printStackTrace();
+        	System.out.println("No se ha encontrado el archivo");
             throw new RuntimeException(e);
         } catch (IOException e) {
+        	e.printStackTrace();
             throw new RuntimeException(e);
         } catch (ClassNotFoundException e) {
+        	e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

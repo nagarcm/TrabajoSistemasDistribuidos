@@ -2,6 +2,7 @@ package pruebas;
 
 import logic.*;
 import model.*;
+import interfaz.*;
 import persistence.Persistencia;
 
 import java.io.*;
@@ -19,17 +20,19 @@ public class PrincipalPruebas {
         game.startGame();
 */
         //ESto hay que meterlo tras la creacion del juego y antes de la partida
-        Persistencia.initialiceData();
-        CardManager.addAll(Persistencia.getAllCards());
+        
 
-        ClaseDePruebaQueExtiendeThread si = new ClaseDePruebaQueExtiendeThread(new Game());
-        si.start();
+//        ClaseDePruebaQueExtiendeThread si = new ClaseDePruebaQueExtiendeThread(new Game());
+//        si.start();
+//
+//        Game g =new Game();
+//        g.setHosting(false);
+//        g.startGame();
+//
 
-        Game g =new Game();
-        g.setHosting(false);
-        g.startGame();
-
-
+        
+        InterfazTextual it = new InterfazTextual();
+        it.startGame();
 
 
         System.out.println("\nEND");

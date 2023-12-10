@@ -29,10 +29,12 @@ public class CardContainer {
 	// PRE : The card collection is not empty or there is a auxiliarCardSource != null;
 	// POST: Returns a card (first among the innate ones or first of the array if there aren't any innate cards
 	public Card drawCard() {
+
+		System.out.println(this.cards.size());
 		if(this.cards.isEmpty() && this.auxiliarCardSource != null){
 			this.cards.addAll(auxiliarCardSource.getAllCards());
 			auxiliarCardSource.clear();
-		}
+		}/*
 		if(numInnate>0) {
 			for(Card c : cards) {
 				if (c.haveMod(CardMod.Innate)) {
@@ -40,8 +42,13 @@ public class CardContainer {
 					return c;
 				}
 			}
-		}
-		return cards.get(0);
+		}*/
+
+		Card c = cards.get(0);
+
+		this.cards.remove(c);
+
+		return c;
 	}
 	// PRE : Card c is in the container
 	// POST : Removes de the card from the container and returns it
@@ -52,12 +59,13 @@ public class CardContainer {
 	public List<Card> drawCards(int num){
 		ArrayList<Card> arrayList = new ArrayList<>();
 		for (int n = 0 ; n<num;n++){
+			System.out.println(1);
 			arrayList.add(this.drawCard());
 		}
 		return arrayList;
 	}
 	
-	public void addCard(Card c) {
+	public void addCard(Card c) {/*
 		if (this.limitCardAmount<this.cards.size()){
 			this.cards.add(c);
 			if (c.haveMod(CardMod.Innate)) {
@@ -65,7 +73,8 @@ public class CardContainer {
 			}
 		} else if(this.auxiliarCardDiscard != null){
 			this.auxiliarCardDiscard.addCard(c);
-		}
+		}*/
+		this.cards.add(c);
 
 	}
 	public boolean isEmpty() {
@@ -87,8 +96,8 @@ public class CardContainer {
 	}
 	public void suflle(){
 		Random random = new Random();
-		Card card = this.cards.getLast();
-		this.cards.removeLast();
+		Card card = this.cards.get(this.cards.size()-1);
+		this.cards.remove(this.cards.size()-1);
 		int index = random.nextInt(this.cards.size());
 		for(int n = 0; n <70 ; n++){
 			card  = this.cards.set(index,card);
