@@ -86,7 +86,7 @@ public class GameClient {
 				lastUpdate = (DataUpdate) input.readObject();
 				processUpdate(lastUpdate);
 				if (turn) {
-					System.out.println(this.action.toString());
+					
 					output.writeObject(this.action);
 				}
 			}

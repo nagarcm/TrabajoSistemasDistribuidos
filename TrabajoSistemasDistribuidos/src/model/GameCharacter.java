@@ -210,9 +210,7 @@ public class GameCharacter implements ITurnReset {
 	}
 	public void turnStart(){
 		this.block =0;
-		System.out.println("si");
-		this.hand.addAll(this.drawPile.drawCards(5));
-		System.out.println("no");
+		this.hand.addAll(this.drawPile.drawCards(4));
 		this.energy = 3;
 	}
 	public void addMantra(int mantra) {

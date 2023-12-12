@@ -112,14 +112,13 @@ public class GameHost extends Thread{
         //Inicializar partida
         this.activePlayer.initializeMatch();
         this.pasivePlayer.initializeMatch();
-        activePlayer.startTurn();
-        System.out.println("PreLoop");
         while(!this.gameEnd){
             System.out.println("Turno "+turn);
             //Logica de turno
             this.endTurn = false;
             this.activePlayer.startTurn();
-            while(!endTurn && !this.gameEnd) {
+            while(!endTurn) {
+            	System.out.println("endTurn:" + this.endTurn);
                 //Mientras que el usuario no termine el turno o no haya un jugador con 0 vida no cambiamos de jugador activo
 
                 //Antes de la accion del usuario enviamos un resumen con el estado actual de la partida
@@ -129,13 +128,15 @@ public class GameHost extends Thread{
                 pasivePlayer.send(updatePasive);
                 //Recibimos la accion del usuario y la procesamos
                 playerAction = activePlayer.recibe();
-                this.processAction(playerAction); // Process action cambia el endTurn internamente
+                this.endTurn =this.processAction(playerAction); // Process action cambia el endTurn internamente
+                System.out.println("salimos del process accion");
                 //Permanecemos en el bucle si no ha terminado el turno
             }
             //Terminamos turno y cambiamos de jugador activo
          this.activePlayer.endTurn();
          this.switchPlayers();
          turn++;
+         System.out.println("Llegamos aqui");
         }
         DataUpdate d = this.generateUpdate(true, 0, 0, 0);
         d.setLastUpdate(true);
@@ -158,6 +159,32 @@ public class GameHost extends Thread{
         activePlayer = pasivePlayer;
         pasivePlayer = aux;
     }
+
+
+    private boolean processAction(PlayerAction playerAction){
+        
+        if (!playerAction.isEndTurn()){
+            this.lastPlayed = playerAction.getPlayedCard();
+            this.activePlayer.getCharacter().getHand().removeCard(lastPlayed);
+            this.activePlayer.getCharacter().getDiscardPile().addCard(lastPlayed);
+            switch (playerAction.getPlayedCard().getCardType()){
+                case Attack -> processAttack((AttackCard) playerAction.getPlayedCard());
+                case Skill -> processSkill((SkillCard) playerAction.getPlayedCard());
+                //case Power -> processPower(null);
+                //case Curse -> processCurse(null);
+                //case Status -> processStatus(null);
+            }
+            System.out.println("No acabamos turno");
+        }else {
+
+        	System.out.println("Acabamos Turno");//enturn==true;
+        }
+        System.out.println("salimos del if");
+        this.gameEnd = this.activePlayer.getCharacter().getHp()==0 || this.pasivePlayer.getCharacter().getHp()==0;
+        System.out.println("Prereturn");
+        return playerAction.isEndTurn();
+        
+    }
     private DataUpdate generateUpdate(boolean endGame,int dmgPerHit, int numHits,int blockGain){
         return new DataUpdate(endGame  , true, Target.Self, dmgPerHit, numHits, 0, blockGain,
                 false, null,null,this.pasivePlayer.getCharacter().getHp(),this.pasivePlayer.getCharacter().getBlock(),pasivePlayer.getCharacter().getStance(),
@@ -169,24 +196,7 @@ public class GameHost extends Thread{
                 0,0, CharacterStance.None,0,null,null);
 
     }
-
-    private void processAction(PlayerAction playerAction){
-        this.endTurn = playerAction.isEndTurn();
-        if (!this.endTurn){
-            this.lastPlayed = playerAction.getPlayedCard();
-            this.activePlayer.getCharacter().getHand().removeCard(lastPlayed);
-            this.activePlayer.getCharacter().getDiscardPile().addCard(lastPlayed);
-            switch (playerAction.getPlayedCard().getCardType()){
-                case Attack -> processAttack((AttackCard) playerAction.getPlayedCard());
-                case Skill -> processSkill((SkillCard) playerAction.getPlayedCard());
-                //case Power -> processPower(null);
-                //case Curse -> processCurse(null);
-                //case Status -> processStatus(null);
-            }
-        }
-        this.gameEnd = this.activePlayer.getCharacter().getHp()==0 || this.pasivePlayer.getCharacter().getHp()==0;
-        //Do stuff
-    }
+    
     private void processAttack(AttackCard attack){      
 
         GameCharacter gc = activePlayer.getCharacter();

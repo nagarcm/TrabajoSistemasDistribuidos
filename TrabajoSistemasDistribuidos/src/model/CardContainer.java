@@ -28,9 +28,7 @@ public class CardContainer {
 	}
 	// PRE : The card collection is not empty or there is a auxiliarCardSource != null;
 	// POST: Returns a card (first among the innate ones or first of the array if there aren't any innate cards
-	public Card drawCard() {
-
-		System.out.println(this.cards.size());
+	public Card drawCard() {	
 		if(this.cards.isEmpty() && this.auxiliarCardSource != null){
 			this.cards.addAll(auxiliarCardSource.getAllCards());
 			auxiliarCardSource.clear();
@@ -59,7 +57,6 @@ public class CardContainer {
 	public List<Card> drawCards(int num){
 		ArrayList<Card> arrayList = new ArrayList<>();
 		for (int n = 0 ; n<num;n++){
-			System.out.println(1);
 			arrayList.add(this.drawCard());
 		}
 		return arrayList;

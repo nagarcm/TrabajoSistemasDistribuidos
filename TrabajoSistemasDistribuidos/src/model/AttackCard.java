@@ -189,7 +189,7 @@ public class AttackCard extends Card {
 			sb.append(cm);
 			sb.append(" ");
 		}
-		sb.append(" Energy Cost: ");
+		sb.append("\tEnergy Cost: ");
 		sb.append(this.energyCost);
 		sb.append(" Description: ");
 		sb.append(this.description);

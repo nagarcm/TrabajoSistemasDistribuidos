@@ -104,11 +104,6 @@ public abstract class Card implements Serializable{
 	public abstract void played();
 	public abstract void copyStats(Card c);
 	public abstract int getEnergyCost();
-	/*
-	@Override
-	public abstract String toString();
 	
-	
-	*/
 	//end of the class
 }
