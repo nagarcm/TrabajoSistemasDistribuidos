@@ -198,11 +198,15 @@ public class GameCharacter implements ITurnReset {
 		this.turn.reset();
 		//do stuff when the turn ends;
 		this.discardPile.addAll(this.hand.takeAllNonRetained());
+		List<Buff> ar = new ArrayList<>();
 		for ( Buff b : this.buffs){
 			b.setTurnsLeft(b.getTurnsLeft()-1);
 			if (b.getTurnsLeft()==0){
-				buffs.remove(b);
+				ar.add(b);
 			}
+		}
+		for(Buff b : ar) {
+			this.buffs.remove(b);
 		}
 
 		// UPDATE : DEberia añadir una clase debuff container para gestionar toda la logica de buffs y que este manejase
@@ -289,7 +293,9 @@ public class GameCharacter implements ITurnReset {
 		hand.addCard(drawPile.drawCard());
 	}
 	public void discardCard(){
+		if(this.hand.size()>1) {
 		discardPile.addCard(hand.drawCard());
+		}
 	}
 	public void discardCard(Card card){
 		discardPile.addCard(hand.drawCard(card));

@@ -62,14 +62,11 @@ public class GameHost extends Thread{
 
     @Override
     public void run(){
-    	System.out.println("Inicializado el Host en otro hilo");
     	//Dado que este es el ordenador donde se hosteara el juego, inicializamos el card manager con la coleccion de cartas que tomemos de persistencia.
     	Persistencia.initialiceData();
         CardManager.addAll(Persistencia.getAllCards());
-        System.out.println("Datos de las cartas iniciados");
         try {
             this.ip = InetAddress.getLocalHost().getHostAddress();
-            System.out.println("Ip asignada");
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
@@ -78,9 +75,6 @@ public class GameHost extends Thread{
         try (ServerSocket serverSocket = new ServerSocket(0);) {
             // Lo hacemos aqui porque tras finalizar la(s) partida(s) queremos finalizar la conexion con el cliente
             try {
-                //para pruebas
-//                System.out.println("IP: " + ip);
-//                System.out.println("PORT: " + serverSocket.getLocalPort());
                 this.port = serverSocket.getLocalPort();
                 //Conexion con ambos clientes
                 this.activePlayer = new HostClient(serverSocket.accept());
@@ -102,7 +96,7 @@ public class GameHost extends Thread{
     }
 
     private void playGame() throws IOException{//hacemos throw para agrupar las excepciones de conexion con clientes
-    	System.out.println("StartGame");
+    	System.out.println("Starting Game...");
         int turn =0;
         //Play 1 game (match)
         Random random = new Random();
@@ -118,9 +112,6 @@ public class GameHost extends Thread{
             this.endTurn = false;
             this.activePlayer.startTurn();
             while(!endTurn) {
-            	System.out.println("endTurn:" + this.endTurn);
-                //Mientras que el usuario no termine el turno o no haya un jugador con 0 vida no cambiamos de jugador activo
-
                 //Antes de la accion del usuario enviamos un resumen con el estado actual de la partida
                 updateActive = this.generateUpdate(false, 0, 0, 0);
                 updatePasive = updateActive.invertData();
@@ -129,14 +120,12 @@ public class GameHost extends Thread{
                 //Recibimos la accion del usuario y la procesamos
                 playerAction = activePlayer.recibe();
                 this.endTurn =this.processAction(playerAction); // Process action cambia el endTurn internamente
-                System.out.println("salimos del process accion");
                 //Permanecemos en el bucle si no ha terminado el turno
             }
             //Terminamos turno y cambiamos de jugador activo
          this.activePlayer.endTurn();
          this.switchPlayers();
          turn++;
-         System.out.println("Llegamos aqui");
         }
         DataUpdate d = this.generateUpdate(true, 0, 0, 0);
         d.setLastUpdate(true);
@@ -174,14 +163,8 @@ public class GameHost extends Thread{
                 //case Curse -> processCurse(null);
                 //case Status -> processStatus(null);
             }
-            System.out.println("No acabamos turno");
-        }else {
-
-        	System.out.println("Acabamos Turno");//enturn==true;
         }
-        System.out.println("salimos del if");
         this.gameEnd = this.activePlayer.getCharacter().getHp()==0 || this.pasivePlayer.getCharacter().getHp()==0;
-        System.out.println("Prereturn");
         return playerAction.isEndTurn();
         
     }

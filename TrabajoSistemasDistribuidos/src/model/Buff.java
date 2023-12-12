@@ -49,7 +49,7 @@ public class Buff implements Serializable {
 	}
 	@Override
 	public String toString() {
-		return this.name + " for "+ this.turnsLeft+ " turns.";
+		return this.name + " have "+ this.turnsLeft+ " turns.";
 	}
 	
 }

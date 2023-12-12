@@ -93,12 +93,5 @@ public class InterfazTextual {
 					}
 		System.out.println("Gracias por haber jugado");
 	}
-	
-	
-	
-	
-	
-	
-	
 
 }

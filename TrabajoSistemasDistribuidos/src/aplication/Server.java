@@ -20,7 +20,7 @@ public class Server {
 			port = host.getPort();
 			ip=host.getIp();
 			
-			System.out.println("LocalHost: "+ip+"\nPort: "+port);
+			System.out.println("Servidor iniciado\nLocalHost: "+ip+"\nPort: "+port);
 
 		} catch (InterruptedException e) {
 			e.printStackTrace();

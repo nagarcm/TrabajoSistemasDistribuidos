@@ -123,9 +123,13 @@ public class CardContainer {
 		for (Card c : this.cards){
 			if(!c.haveMod(CardMod.Retain)){
 				ar.add(c);
-				this.cards.remove(c);
 			}
 		}
+		
+		for (Card c : ar) {
+			this.cards.remove(c);
+		}
+		
 		return ar;
 	}
 
